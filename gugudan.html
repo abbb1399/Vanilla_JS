@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        #btnDiv {
+            text-align: center
+        }
+
+        #mainBox {
+            margin: auto;
+            width: 500px;
+            height: 500px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>구구단</h1>
+    <div id="btnDiv"></div>
+    <div id="mainBox"></div>
+    
+    <script>
+        //for(let i=1; i<=9; i++){
+        //    const btnForm = document.createElement('button');    
+        //    btnForm.textContent=`${i}단`;
+        //    btnForm.dataset.dan = i;        //data-dan="1,2,3,4,5..."
+        //    document.getElementById("btnDiv").append(btnForm);
+        //}
+        
+        //재귀로 바꿔보기
+        (function makeDanButton(start,end){
+            const btnForm = document.createElement('button');
+            btnForm.textContent=`${start}단`;
+            btnForm.dataset.dan = start;
+            document.getElementById("btnDiv").append(btnForm);
+            if(start++ <end) makeDanButton(start,end);
+        })(1,9);
+
+        // const btns = document.getElementsByTagName('button');
+        // for (let i = 0; i < btns.length; i++) {
+        //     btns[i].addEventListener('click', function () {
+        //         let str= '';
+        //         for (let j = 1; j <= 9; j++) {
+        //             str += `<h3> ${i+1} * ${j} = ${(i+1) * j} </h3>`;   
+        //         }
+        //         document.querySelector('#mainBox').innerHTML = str;
+        //     });
+        // }
+
+        //재귀로 바꿔보기
+        const btns = document.querySelectorAll('button');   //queryselector는 DOMList, forEach 사용가능
+        btns.forEach(btn => {
+            btn.addEventListener('click',function(){
+                let str='';
+                const danNumber = btn.dataset.dan;          //1,2,3,4,5, 불러오기
+                (function makeDan(start,end){
+                    str += `<h3> ${danNumber} * ${start} = ${danNumber * start} </h3>`;   
+                    if(start++ < end) makeDan(start,end);
+                })(1,9);
+                document.querySelector('#mainBox').innerHTML = str;
+            });
+        });
+
+    </script>
+</body>
+</html>

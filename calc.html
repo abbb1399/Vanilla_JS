@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        input {
+            text-align: right;
+            width: 494px;
+            height: 50px;
+        }
+
+        #btnBox {
+            width: 500px;
+            height: 500px;
+            border: 1px solid black;
+            display: grid;
+
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .ac {
+            grid-column: 1/3;   
+        }
+
+        .zero {
+            grid-column: 1/3;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>계산기</h1>
+    <div>
+        <div>
+            <input type="text" value=0 disabled>
+        </div>
+        <div id="btnBox">
+            <button data-type="ac" class='ac'>AC</button>
+            <button data-type="backspace"><-</button>
+            <button data-type="operator">/</button>
+
+            <button>7</button>
+            <button>8</button>
+            <button>9</button>
+            <button data-type="operator">*</button>
+
+            <button>4</button>
+            <button>5</button>
+            <button>6</button>
+            <button data-type="operator">-</button>
+
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+            <button data-type="operator">+</button>
+
+            <button class='zero'>0</button>
+            <button>.</button>
+            <button data-type="equals">=</button>
+        </div>
+    </div>
+
+    <script>
+        const btns = document.querySelectorAll('button');
+        const input = document.querySelector('input');  
+        let operatorCheck = false;
+    
+
+        function appendNumber(number) {
+            if(input.value == 0){
+                input.value = '';
+            }
+            input.value += number;
+
+            operatorCheck = false;     
+        }
+
+        function appendOperator(operator) {
+            if (operatorCheck){
+                return  // operatorCheck값이 true이면 함수 빠져나가기 (연속된 기호가 입력되는걸 방지)
+            }        
+            input.value += operator;
+            operatorCheck =true;    // true로 변환
+        }
+
+
+        function clearAll() {
+            input.value = '';
+            input.value = 0;
+        }
+
+        function calculate() {
+            if (operatorCheck) return 
+                let result = eval(input.value       // 2+ 상태서 =누를때 에러방지
+                .replace('\u00D7', '*')
+                .replace('\u00F7', '/'));   
+            console.log(result);
+            
+            input.value = result;
+        }
+
+        function backSpace(){
+            let result2 = input.value;
+            input.value = result2.substring(0, result2.length-1);
+            // substring 으로 0부터 value 길이에서 -1 한 만큼의 길이를 출력한다
+
+            if((input.value == '') ){
+                input.value = 0;
+            }
+        }
+
+
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                switch (btn.dataset.type) {
+                    case 'operator':
+                        appendOperator(btn.innerText);
+                        break
+                    case 'ac':
+                        clearAll();
+                        break
+
+                    case 'equals':
+                        calculate();
+                        break
+
+                    case 'backspace':
+                        backSpace();
+                        break
+
+                    default:
+                        appendNumber(btn.innerText);
+                        break
+                }
+            })
+        })
+
+
+        document.addEventListener('keydown', function (e) {
+            const keyCode = e.keyCode;
+    
+            if ((keyCode > 95) && (keyCode < 106)) {    //키패드 숫자
+                appendNumber(e.key);
+            }
+            else if (keyCode == 107) {  //오른쪽 +
+                appendOperator(e.key);
+            }
+            else if (keyCode == 109) {  //오른쪽 -
+                appendOperator(e.key);
+            }
+            else if (keyCode == 106) {  //오른쪽 *
+                appendOperator(e.key);
+            }
+            else if (keyCode == 111) {  //오른쪽 /
+                appendOperator(e.key);
+            }
+            else if (keyCode == 191) {  // /
+                appendOperator(e.key);
+            }
+            else if (keyCode == 110) {  // .
+                appendOperator(e.key);
+            }
+            else if (keyCode == 190) {  // .
+                appendOperator(e.key);
+            }
+            else if (keyCode == 188) {  // .
+                appendOperator(e.key);
+            }
+            else if (keyCode == 13) {   // 오른쪽 enter키
+                calculate();
+            }else if(keyCode == 8){     //백스페이스키
+                backSpace();
+            }       
+            return true;       
+        })
+    </script>
+</body>
+
+</html>
